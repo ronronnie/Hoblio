@@ -1,5 +1,6 @@
 export type Workspace = {
   id: string;
+  trackerSlug: "cricket" | "sneakers";
   name: string;
-  ownerUserId: string;
+  ownerId: string;
 };

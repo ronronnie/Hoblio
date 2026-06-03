@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
-import type { Database } from "@/lib/supabase/database.types";
+import type { Database, TypedSupabaseClient } from "@/lib/supabase/database.types";
 
 export async function createSupabaseServerClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -24,5 +24,5 @@ export async function createSupabaseServerClient() {
         // Server Components cannot remove cookies. Route handlers will own auth mutations.
       }
     }
-  });
+  }) as unknown as TypedSupabaseClient;
 }

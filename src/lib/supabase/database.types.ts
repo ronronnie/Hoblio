@@ -1,3 +1,5 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type TrackerStatus = "available" | "coming_soon";
@@ -29,6 +31,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [];
       };
       trackers: {
         Row: {
@@ -61,6 +64,7 @@ export type Database = {
           is_paid?: boolean;
           created_at?: string;
         };
+        Relationships: [];
       };
       workspaces: {
         Row: {
@@ -90,6 +94,22 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "workspaces_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workspaces_tracker_slug_fkey";
+            columns: ["tracker_slug"];
+            isOneToOne: false;
+            referencedRelation: "trackers";
+            referencedColumns: ["slug"];
+          }
+        ];
       };
       workspace_members: {
         Row: {
@@ -113,6 +133,22 @@ export type Database = {
           role?: WorkspaceMemberRole;
           created_at?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "workspace_members_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "workspace_members_workspace_id_fkey";
+            columns: ["workspace_id"];
+            isOneToOne: false;
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       user_tracker_activations: {
         Row: {
@@ -139,6 +175,29 @@ export type Database = {
           status?: UserTrackerActivationStatus;
           created_at?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "user_tracker_activations_tracker_slug_fkey";
+            columns: ["tracker_slug"];
+            isOneToOne: false;
+            referencedRelation: "trackers";
+            referencedColumns: ["slug"];
+          },
+          {
+            foreignKeyName: "user_tracker_activations_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_tracker_activations_workspace_id_fkey";
+            columns: ["workspace_id"];
+            isOneToOne: false;
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       subscriptions: {
         Row: {
@@ -168,6 +227,15 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       ai_usage_logs: {
         Row: {
@@ -203,6 +271,29 @@ export type Database = {
           audio_seconds?: number;
           created_at?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_logs_tracker_slug_fkey";
+            columns: ["tracker_slug"];
+            isOneToOne: false;
+            referencedRelation: "trackers";
+            referencedColumns: ["slug"];
+          },
+          {
+            foreignKeyName: "ai_usage_logs_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ai_usage_logs_workspace_id_fkey";
+            columns: ["workspace_id"];
+            isOneToOne: false;
+            referencedRelation: "workspaces";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: Record<string, never>;
@@ -232,3 +323,5 @@ export type Database = {
     CompositeTypes: Record<string, never>;
   };
 };
+
+export type TypedSupabaseClient = SupabaseClient<Database, "public", "public", Database["public"]>;

@@ -12,7 +12,7 @@ const trackerRegistry = [
     isPaid: false,
     freeLimitEligible: true,
     defaultRoute: "/app/cricket/:workspaceId/dashboard",
-    setupRoute: "/app/cricket/:workspaceId/settings",
+    setupRoute: "/app/cricket/setup",
     moduleKey: "cricket"
   },
   {
@@ -26,7 +26,7 @@ const trackerRegistry = [
     isPaid: false,
     freeLimitEligible: false,
     defaultRoute: "/app/sneakers/:workspaceId/dashboard",
-    setupRoute: "/app/sneakers/:workspaceId/settings",
+    setupRoute: "/app/sneakers/setup",
     moduleKey: "sneakers"
   }
 ] as const satisfies readonly TrackerDefinition[];
