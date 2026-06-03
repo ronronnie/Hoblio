@@ -1,9 +1,8 @@
 import type { ActivatedTracker, TrackerSlug } from "./types";
-import { getTrackerBySlug } from "./trackerRegistry";
+import { isTrackerAvailable } from "./trackerRegistry";
 
 export function canActivateTracker(trackerSlug: TrackerSlug) {
-  const tracker = getTrackerBySlug(trackerSlug);
-  return tracker?.status === "active";
+  return isTrackerAvailable(trackerSlug);
 }
 
 export function createActivationRecord(

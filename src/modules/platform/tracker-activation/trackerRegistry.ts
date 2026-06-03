@@ -1,30 +1,52 @@
 import type { TrackerDefinition, TrackerSlug } from "./types";
 
-export const trackerRegistry: TrackerDefinition[] = [
+const trackerRegistry = [
   {
-    slug: "cricket",
+    id: "cricket-tracker",
     name: "Cricket Tracker",
+    slug: "cricket",
     description: "Manage matches, scorecards, calculations, dashboards, and player profiles.",
-    status: "active",
-    modulePath: "@/modules/cricket"
+    category: "Sports",
+    iconName: "Trophy",
+    status: "available",
+    isPaid: false,
+    freeLimitEligible: true,
+    defaultRoute: "/app/cricket/:workspaceId/dashboard",
+    setupRoute: "/app/cricket/:workspaceId/settings",
+    moduleKey: "cricket"
   },
   {
-    slug: "sneakers",
+    id: "sneaker-vault",
     name: "Sneaker Vault",
+    slug: "sneakers",
     description: "A planned inventory and collection tracker. Not implemented in the MVP.",
-    status: "coming-soon",
-    modulePath: "@/modules/sneakers"
+    category: "Collection",
+    iconName: "Footprints",
+    status: "coming_soon",
+    isPaid: false,
+    freeLimitEligible: false,
+    defaultRoute: "/app/sneakers/:workspaceId/dashboard",
+    setupRoute: "/app/sneakers/:workspaceId/settings",
+    moduleKey: "sneakers"
   }
-];
+] as const satisfies readonly TrackerDefinition[];
+
+export function getAllTrackers(): TrackerDefinition[] {
+  return [...trackerRegistry];
+}
+
+export function getAvailableTrackers(): TrackerDefinition[] {
+  return trackerRegistry.filter((tracker) => tracker.status === "available");
+}
 
 export function getTrackerBySlug(slug: string): TrackerDefinition | undefined {
   return trackerRegistry.find((tracker) => tracker.slug === slug);
 }
 
-export function isKnownTrackerSlug(slug: string): slug is TrackerSlug {
-  return trackerRegistry.some((tracker) => tracker.slug === slug);
+export function isTrackerAvailable(slug: string): boolean {
+  return getTrackerBySlug(slug)?.status === "available";
 }
 
-export function getActiveTrackers() {
-  return trackerRegistry.filter((tracker) => tracker.status === "active");
+export function isKnownTrackerSlug(slug: string): slug is TrackerSlug {
+  return trackerRegistry.some((tracker) => tracker.slug === slug);
 }

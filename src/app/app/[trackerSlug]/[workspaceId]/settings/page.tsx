@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getTrackerBySlug } from "@/modules/platform/tracker-activation/trackerRegistry";
+import {
+  getTrackerBySlug,
+  isTrackerAvailable
+} from "@/modules/platform/tracker-activation/trackerRegistry";
 
 type SettingsPageProps = {
   params: Promise<{
@@ -13,7 +16,7 @@ export default async function TrackerSettingsPage({ params }: SettingsPageProps)
   const { trackerSlug, workspaceId } = await params;
   const tracker = getTrackerBySlug(trackerSlug);
 
-  if (!tracker || tracker.status !== "active") {
+  if (!tracker || !isTrackerAvailable(trackerSlug)) {
     notFound();
   }
 

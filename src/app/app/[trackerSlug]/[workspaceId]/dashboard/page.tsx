@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { CricketDashboardPlaceholder } from "@/modules/cricket/components/cricket-dashboard-placeholder";
-import { getTrackerBySlug } from "@/modules/platform/tracker-activation/trackerRegistry";
+import {
+  getTrackerBySlug,
+  isTrackerAvailable
+} from "@/modules/platform/tracker-activation/trackerRegistry";
 
 type DashboardPageProps = {
   params: Promise<{
@@ -13,7 +16,7 @@ export default async function TrackerDashboardPage({ params }: DashboardPageProp
   const { trackerSlug, workspaceId } = await params;
   const tracker = getTrackerBySlug(trackerSlug);
 
-  if (!tracker || tracker.status !== "active") {
+  if (!tracker || !isTrackerAvailable(trackerSlug)) {
     notFound();
   }
 
